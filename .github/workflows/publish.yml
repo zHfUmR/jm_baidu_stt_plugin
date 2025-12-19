@@ -1,0 +1,26 @@
+name: Publish to Pub.dev
+
+on:
+  push:
+    tags:
+      - 'v*' # 当你推送到以 v 开头的标签时触发，如 v0.0.1
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Setup Pub Credentials
+        run: |
+          mkdir -p ~/.config/dart
+          echo '${{ secrets.PUB_CREDENTIALS_JSON }}' > ~/.config/dart/pub-credentials.json
+
+      - name: Publish package
+        run: flutter pub publish --force
