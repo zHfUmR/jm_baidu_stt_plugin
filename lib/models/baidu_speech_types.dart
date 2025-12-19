@@ -1,7 +1,4 @@
-enum BaiduSpeechBuildType {
-  asr,
-  wakeUp,
-}
+enum BaiduSpeechBuildType { asr, wakeUp }
 
 enum BaiduSpeechStatusType {
   /// 语音识别中

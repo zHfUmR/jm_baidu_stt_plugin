@@ -72,28 +72,45 @@ class _MyAppState extends State<MyApp> {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  ElevatedButton(onPressed: _createAsr, child: const Text('Create ASR')),
                   ElevatedButton(
-                    onPressed: _asrCreated ? () => JmBaiduSttPlugin.startRecognition() : null,
+                    onPressed: _createAsr,
+                    child: const Text('Create ASR'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _asrCreated
+                        ? () => JmBaiduSttPlugin.startRecognition()
+                        : null,
                     child: const Text('Start Recognition'),
                   ),
                   ElevatedButton(
-                    onPressed: _asrCreated ? () => JmBaiduSttPlugin.stopRecognition() : null,
+                    onPressed: _asrCreated
+                        ? () => JmBaiduSttPlugin.stopRecognition()
+                        : null,
                     child: const Text('Stop Recognition'),
                   ),
-                  ElevatedButton(onPressed: _createWakeUp, child: const Text('Create Wake-up')),
                   ElevatedButton(
-                    onPressed: _wakeCreated ? () => JmBaiduSttPlugin.startMonitorWakeUp() : null,
+                    onPressed: _createWakeUp,
+                    child: const Text('Create Wake-up'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _wakeCreated
+                        ? () => JmBaiduSttPlugin.startMonitorWakeUp()
+                        : null,
                     child: const Text('Start Wake-up'),
                   ),
                   ElevatedButton(
-                    onPressed: _wakeCreated ? () => JmBaiduSttPlugin.stopMonitorWakeUp() : null,
+                    onPressed: _wakeCreated
+                        ? () => JmBaiduSttPlugin.stopMonitorWakeUp()
+                        : null,
                     child: const Text('Stop Wake-up'),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              const Text('Native event stream', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Native event stream',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
               Expanded(
                 child: DecoratedBox(
@@ -104,7 +121,10 @@ class _MyAppState extends State<MyApp> {
                   child: ListView.builder(
                     itemCount: _logs.length,
                     itemBuilder: (context, index) {
-                      return Padding(padding: const EdgeInsets.all(8.0), child: Text(_logs[index]));
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(_logs[index]),
+                      );
                     },
                   ),
                 ),

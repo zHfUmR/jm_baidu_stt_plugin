@@ -10,13 +10,19 @@ import 'models/baidu_speech_types.dart';
 class MethodChannelJmBaiduSttPlugin extends JmBaiduSttPluginPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final MethodChannel methodChannel = const MethodChannel('jm_baidu_stt_plugin');
-  final EventChannel _eventChannel = const EventChannel('jm_baidu_stt_plugin/event');
+  final MethodChannel methodChannel = const MethodChannel(
+    'jm_baidu_stt_plugin',
+  );
+  final EventChannel _eventChannel = const EventChannel(
+    'jm_baidu_stt_plugin/event',
+  );
   Stream<dynamic>? _listener;
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version = await methodChannel.invokeMethod<String>(
+      'getPlatformVersion',
+    );
     return version;
   }
 
@@ -33,15 +39,12 @@ class MethodChannelJmBaiduSttPlugin extends JmBaiduSttPluginPlatform {
     required String appKey,
     required String appSecret,
   }) {
-    return methodChannel.invokeMethod(
-      'create',
-      {
-        'type': type.index,
-        'appId': appId,
-        'appKey': appKey,
-        'appSecret': appSecret,
-      },
-    );
+    return methodChannel.invokeMethod('create', {
+      'type': type.index,
+      'appId': appId,
+      'appKey': appKey,
+      'appSecret': appSecret,
+    });
   }
 
   @override

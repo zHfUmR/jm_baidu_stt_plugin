@@ -29,9 +29,7 @@ class JmBaiduSttPlugin {
   }
 
   /// 创建语音识别或唤醒实例
-  static Future<void> create({
-    required BaiduSpeechBuildType type,
-  }) {
+  static Future<void> create({required BaiduSpeechBuildType type}) {
     final cache = SdkDataCache();
     return JmBaiduSttPluginPlatform.instance.create(
       type: type,
@@ -43,7 +41,9 @@ class JmBaiduSttPlugin {
 
   /// 开始语音识别
   static Future<void> startRecognition({String? wakeUpWord}) {
-    return JmBaiduSttPluginPlatform.instance.startRecognition(wakeUpWord: wakeUpWord);
+    return JmBaiduSttPluginPlatform.instance.startRecognition(
+      wakeUpWord: wakeUpWord,
+    );
   }
 
   /// 结束语音识别

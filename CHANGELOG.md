@@ -1,3 +1,6 @@
+## 0.0.7
+* Fix: code formatting and align versions.
+
 ## 0.0.6
 * Fix: Synchronize podspec version with package version.
 
