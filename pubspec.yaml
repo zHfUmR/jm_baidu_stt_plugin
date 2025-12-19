@@ -1,6 +1,6 @@
 name: jm_baidu_stt_plugin
 description: "Baidu speech recognition & wake-up Flutter plugin powered by the latest native SDKs."
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/zHfUmR/jm_baidu_stt_plugin
 
 environment:

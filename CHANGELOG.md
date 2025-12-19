@@ -1,3 +1,9 @@
+## 0.0.5
+* Fix: "chore: remove binaries from git to keep repo light"
+
+## 0.0.4
+* Fix: final setup for binary distribution v0.0.4
+
 ## 0.0.3
 * Fix: package size limit for pub.dev
 
