@@ -1,0 +1,4 @@
+# 排除 iOS 的静态库大文件
+ios/Libs/BDSClientLib/libBaiduSpeechSDK.a
+# 排除语音识别模型大文件
+ios/Assets/BDSClientEASRResources/bds_easr_input_model.dat
