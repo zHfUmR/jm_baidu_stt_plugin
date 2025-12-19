@@ -1,3 +1,6 @@
+## 0.0.6
+* Fix: Synchronize podspec version with package version.
+
 ## 0.0.5
 * Fix: "chore: remove binaries from git to keep repo light"
 
