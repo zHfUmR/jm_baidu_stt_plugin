@@ -31,3 +31,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+# Baidu SDK Binaries (Excluded from Git as they are managed via GitHub Releases)
+ios/Libs/BDSClientLib/libBaiduSpeechSDK.a
+ios/Assets/BDSClientEASRResources/bds_easr_input_model.dat

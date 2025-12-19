@@ -7,8 +7,14 @@ Flutter bindings for the latest Baidu Speech ASR & wake-up SDKs.
 
 The plugin exposes a simple Dart API that mirrors the reference native demo so you can initialize the SDK, create recognizer/wake-up engines, and handle streaming status callbacks from Dart.
 
-### Note: Because the Baidu SDK is too large, this plugin package does not include the binary libraries. Please download libBaiduSpeechSDK.a and bds_easr_input_model.dat from the GitHub Release and manually place them in the corresponding directories of your project. ###
-### 注意：由于百度 SDK 体积过大，本插件包不含二进制库。请从 GitHub Release 下载 libBaiduSpeechSDK.a 和 bds_easr_input_model.dat，并手动放入项目的对应目录中。 ###
+~~### Note: Because the Baidu SDK is too large, this plugin package does not include the binary libraries. Please download libBaiduSpeechSDK.a and bds_easr_input_model.dat from the GitHub Release and manually place them in the corresponding directories of your project. ###~~
+~~### 注意：由于百度 SDK 体积过大，本插件包不含二进制库。请从 GitHub Release 下载 libBaiduSpeechSDK.a 和 bds_easr_input_model.dat，并手动放入项目的对应目录中。 ###~~
+#### - Now you can directly use `pod install` to download the relevant files. ####
+#### - 现在直接使用pod install 就可以直接下载相关文件 ####
+##### export https_proxy=http://127.0.0.1:7890 #####
+##### export http_proxy=http://127.0.0.1:7890 #####
+##### pod install #####
+
 
 ## Quick start
 
