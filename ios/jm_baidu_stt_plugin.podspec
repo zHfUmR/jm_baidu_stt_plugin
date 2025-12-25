@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'jm_baidu_stt_plugin'
-  s.version          = '0.0.7' # 建议同步升级到你准备发布的版本号
+  s.version          = '0.0.8' # 建议同步升级到你准备发布的版本号
   s.summary          = 'Baidu speech recognition & wake-up Flutter bindings.'
   s.description      = <<-DESC
 最新百度语音识别/唤醒 SDK 的 Flutter 插件封装。
@@ -38,8 +38,22 @@ Pod::Spec.new do |s|
   # 引用下载回来的库
   s.vendored_libraries = 'Libs/BDSClientLib/libBaiduSpeechSDK.a'
   
-  # 资源引用：注意这里要包含你下载的模型文件路径
-  s.resources = ['Assets/**/*', 'Resources/**/*']
+  # 资源引用：
+  # CocoaPods 会把 `s.resources` 里匹配到的文件逐个拷贝到产物目录。
+  # 之前使用 `Assets/**/*` 会同时匹配到 *.bundle 目录以及 bundle 内的文件，
+  # 导致同名 PNG（不同主题 bundle 内）被“扁平化”复制到 framework 根目录，
+  # 从而触发 Xcode: Multiple commands produce。
+  # 这里改为：直接拷贝各个主题的 *.bundle 目录 + 其它非 bundle 资源。
+  s.resources = [
+    # 1. 离线模型文件夹（包含 .dat 等，保持目录结构）
+    'Assets/BDSClientEASRResources/*.dat',
+    # 2. UI 资源 Bundle（不要用 *** 展开，直接引用整个 .bundle）
+    'Assets/BDSClientResources/Theme/*.bundle',
+    # 3. 提示音等其他必要资源
+    'Assets/BDSClientResources/Tone/*',
+    # 4. 百度 SDK 原始 Resources 目录下的整个 Bundle
+    'Resources/*.bundle'
+  ]
 
   s.frameworks = 'AudioToolbox',
   'AVFoundation',
