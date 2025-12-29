@@ -7,35 +7,75 @@ Flutter bindings for the latest Baidu Speech ASR & wake-up SDKs.
 
 The plugin exposes a simple Dart API that mirrors the reference native demo so you can initialize the SDK, create recognizer/wake-up engines, and handle streaming status callbacks from Dart.
 
-~~### Note: Because the Baidu SDK is too large, this plugin package does not include the binary libraries. Please download libBaiduSpeechSDK.a and bds_easr_input_model.dat from the GitHub Release and manually place them in the corresponding directories of your project. ###~~
-~~### 注意：由于百度 SDK 体积过大，本插件包不含二进制库。请从 GitHub Release 下载 libBaiduSpeechSDK.a 和 bds_easr_input_model.dat，并手动放入项目的对应目录中。 ###~~
-#### - Now you can directly use `pod install` to download the relevant files. ####
-#### - 现在直接使用pod install 就可以直接下载相关文件 ####
-##### export https_proxy=http://127.0.0.1:7890 #####
-##### export http_proxy=http://127.0.0.1:7890 #####
-##### pod install #####
+## Install
+
+1) Add the dependency to your `pubspec.yaml`: `jm_baidu_stt_plugin: ^0.0.9`
+
+2) Install packages: `flutter pub get`
+
+3) For iOS, run CocoaPods from your host app’s `ios/` folder: `pod install`
+
+## iOS SDK delivery (recommended)
+
+Baidu iOS SDK binaries/models are large. For publishing (Git / pub.dev), it is recommended not to commit them into the repository.
+
+This plugin uses CocoaPods `prepare_command` to download missing artifacts during `pod install`.
+
+### Usage
+
+1) Provide download URLs via environment variables.
+
+Option A (recommended): one zip containing both files
+
+- `JM_BAIDU_STT_IOS_SDK_ZIP_URL` (the zip must contain `libBaiduSpeechSDK.a` and `bds_easr_input_model.dat` somewhere inside)
+
+Option B: two direct file URLs
+
+- `JM_BAIDU_STT_IOS_LIB_URL`
+- `JM_BAIDU_STT_IOS_MODEL_URL`
+
+2) Run CocoaPods: `pod install`
+
+If your network requires a proxy, set it before running CocoaPods:
+
+- `export https_proxy=http://127.0.0.1:7890`
+- `export http_proxy=http://127.0.0.1:7890`
+
+### Notes
+
+- If the files already exist in `ios/Libs/...` and `ios/Assets/...`, download is skipped (offline friendly).
+- To force re-download: `export JM_BAIDU_STT_IOS_FORCE_DOWNLOAD=1`
+- To disable download and fail fast if missing: `export JM_BAIDU_STT_IOS_SKIP_DOWNLOAD=1`
+
+### Tip: set URLs in `ios/Podfile` (CI/team friendly)
+
+If you don’t want every developer/CI to export env vars manually, you can set them in your host app’s `ios/Podfile`:
+
+- `ENV['JM_BAIDU_STT_IOS_SDK_ZIP_URL'] ||= '<YOUR_ZIP_URL>'`
+
+Or (two direct URLs):
+
+- `ENV['JM_BAIDU_STT_IOS_LIB_URL'] ||= '<YOUR_LIB_URL>'`
+- `ENV['JM_BAIDU_STT_IOS_MODEL_URL'] ||= '<YOUR_MODEL_URL>'`
 
 
 ## Quick start
 
-```dart
-JmBaiduSttPlugin.initSDK(
-  appId: '<BAIDU_APP_ID>',
-  appKey: '<BAIDU_APP_KEY>',
-  appSecret: '<BAIDU_APP_SECRET>',
-  onEvent: (dynamic event) {
-    debugPrint('status=${event['status']} data=${event['data']}');
-  },
-);
+1) Initialize and subscribe to events: `JmBaiduSttPlugin.initSDK(...)` and provide an `onEvent` callback.
 
-await JmBaiduSttPlugin.create(type: BaiduSpeechBuildType.asr);
-await JmBaiduSttPlugin.startRecognition();
-await JmBaiduSttPlugin.stopRecognition();
+2) Create the ASR engine: `await JmBaiduSttPlugin.create(type: BaiduSpeechBuildType.asr)`
 
-await JmBaiduSttPlugin.create(type: BaiduSpeechBuildType.wakeUp);
-await JmBaiduSttPlugin.startMonitorWakeUp();
-await JmBaiduSttPlugin.stopMonitorWakeUp();
-```
+3) Start recognition: `await JmBaiduSttPlugin.startRecognition()`
+
+Optional (some offline modes): `await JmBaiduSttPlugin.startRecognition(wakeUpWord: '...')`
+
+4) Stop recognition: `await JmBaiduSttPlugin.stopRecognition()`
+
+5) Wake-up:
+
+- Create: `await JmBaiduSttPlugin.create(type: BaiduSpeechBuildType.wakeUp)`
+- Start: `await JmBaiduSttPlugin.startMonitorWakeUp()`
+- Stop: `await JmBaiduSttPlugin.stopMonitorWakeUp()`
 
 ### Event status values
 
@@ -48,6 +88,55 @@ await JmBaiduSttPlugin.stopMonitorWakeUp();
 | `statusTriggered`  | wake-up keyword detected        |
 
 `type` in the payload is `0` for ASR and `1` for wake-up.
+
+## iOS notes (important)
+
+- **Simulator**: the Baidu static library in this project is `arm64` only (device slice). It usually cannot run on iOS Simulator.
+- **Resource lookup**: iOS native code will try to locate `.dat` files from `mainBundle` / `bundleForClass` / common resource bundles, to be resilient under CocoaPods.
+
+### iOS ASR defaults
+
+The iOS implementation follows Baidu’s official sample defaults:
+
+- Default `productId`: `1537`
+- Default `language`: `EVoiceRecognitionLanguageChinese`
+- Default `strategy`: `EVR_STRATEGY_ONLINE`
+
+If you need parallel mode (online + offline), pass `strategy = EVR_STRATEGY_BOTH` and ensure the offline model/license files are available.
+
+### ASR stability
+
+iOS native layer includes guards for common issues:
+
+- Rapid `stopRecognition()` → `startRecognition()` may cause `engine is busy`: the plugin will auto retry with backoff.
+- STOP-induced HTTP timeout will be silently ignored when stopping.
+- `NoSpeech/Short` will be treated as `statusFinish` with empty string.
+
+### Advanced iOS parameters (optional)
+
+The iOS implementation supports extra parameters on `create` (defaults are applied if not provided):
+
+- `productId`: defaults to `1537`
+- `language`: defaults to `EVoiceRecognitionLanguageChinese`
+- `strategy`: defaults to `EVR_STRATEGY_ONLINE`
+- `enableModelVAD`: defaults to `false`
+- `offlineEngineType`: defaults to `EVR_OFFLINE_ENGINE_INPUT` (only used when `strategy == EVR_STRATEGY_BOTH`)
+- `offlineDatPath`: defaults to bundled `bds_easr_input_model.dat` (only used when `strategy == EVR_STRATEGY_BOTH`)
+- `serverUrl`: defaults to `https://vop.baidu.com/server_api`
+
+Current Dart API does not expose these options yet; if you need them you can extend the plugin or invoke `MethodChannel('jm_baidu_stt_plugin').invokeMethod('create', ...)` yourself.
+
+## permission_handler (microphone)
+
+If you use `permission_handler` on iOS, make sure the microphone permission macro is enabled for the `permission_handler_apple` target in your host app’s `ios/Podfile` `post_install`.
+
+Example lines to add (as recommended by the plugin):
+
+- `if target.name == 'permission_handler_apple'`
+- `  target.build_configurations.each do |config|`
+- `    config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'PERMISSION_MICROPHONE=1']`
+- `  end`
+- `end`
 
 ## Android integration notes
 

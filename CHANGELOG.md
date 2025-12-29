@@ -1,37 +1,47 @@
+## 0.0.9
+
+- iOS: Align ASR configuration with Baidu's official iOS sample (adds BDS_ASR_PRODUCT_ID and BDS_ASR_LANGUAGE, sets default strategy to online).
+- iOS: Make recognition text delivery more robust (adds fallback parsing and always emits statusFinish, even when the SDK returns an empty/unknown result format).
+- iOS: Reset selected per-session parameters before each start (long speech, cache audio, wakeup word) to avoid stale state.
+- iOS: Improve stability for rapid start/stop (busy backoff + retry).
+- iOS: Ensure PrivacyInfo.xcprivacy is included as a pod resource.
+
+Notes:
+
+- If you need parallel mode (online + offline), pass strategy = EVR_STRATEGY_BOTH and make sure offline model/license files are available.
+- permission_handler microphone macro guidance has been moved to README.md.
+
 ## 0.0.8
-* **Fix (iOS)**: 优化资源引用逻辑，解决 `Multiple commands produce` 构建错误。
-    - 将 `s.resources` 由递归引用改为精确引用，避免 `.bundle` 内部资源重复拷贝。
-* **Fix (iOS)**: 解决 `VAD start: start error` 问题。
-    - 完善自动化下载脚本，确保本地开发环境下 `.dat` 模型文件与 `.a` 静态库能正确补全。
-* **Important (Permissions)**: 强化麦克风权限配置。
-    - 更新 `Info.plist` 的 `NSMicrophoneUsageDescription` 说明。
-    - **注意**：使用 `permission_handler` 时，必须在 `ios/Podfile` 的 `post_install` 节点中开启 `PERMISSION_MICROPHONE=1` 宏：
-      ```ruby
-      if target.name == 'permission_handler_apple'
-        target.build_configurations.each do |config|
-          config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'PERMISSION_MICROPHONE=1']
-        end
-      end
-      ```
+
+- iOS: Fix CocoaPods resource packaging to avoid Xcode "Multiple commands produce" caused by flattening bundle resources.
+- iOS: Improve iOS artifact download logic to prevent missing .a / .dat files in local dev.
+- iOS: Update microphone usage description guidance.
 
 ## 0.0.7
-* **Style**: 执行 `dart format` 并同步各配置文件版本号。
+
+- Style: Run dart format and sync versions across configuration files.
 
 ## 0.0.6
-* **Fix**: 同步 `.podspec` 版本号与 `pubspec.yaml` 版本号以解决 iOS 安装失败问题。
+
+- Fix: Sync .podspec version with pubspec.yaml to avoid iOS install issues.
 
 ## 0.0.5
-* **Chore**: 从 Git 历史中清理大型二进制文件，实现仓库轻量化。
+
+- Chore: Remove large binaries from Git history to keep the repository lightweight.
 
 ## 0.0.4
-* **Fix**: 完成二进制分发（GitHub Release 托管）的最终配置。
+
+- Fix: Finalize binary distribution via GitHub Releases.
 
 ## 0.0.3
-* **Fix**: 优化发布包结构，适配 `pub.dev` 的 100MB 上传限制。
+
+- Fix: Optimize package structure to meet pub.dev size limits.
 
 ## 0.0.2
-* **Feat**: 增加语音识别初始化、开始、停止等 Dart API 接口及事件流。
-* **Build**: 集成最新的原生 SDK 库与资源文件，更新 Android/iOS 构建配置。
+
+- Feature: Add Dart APIs for init/start/stop and an event stream.
+- Build: Bundle the latest native SDK libraries/resources and update Android/iOS build configuration.
 
 ## 0.0.1
-* **Init**: 首次集成百度语音 ASR/唤醒 SDK (Android v3.4.5, iOS v3.0.12)。
+
+- Initial release: Baidu Speech ASR/wake-up SDK integration (Android v3.4.5, iOS v3.0.12).
