@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'jm_baidu_stt_plugin'
-  s.version          = '0.1.1' # 建议同步升级到你准备发布的版本号
+  s.version          = '0.1.2' # 建议同步升级到你准备发布的版本号
   s.summary          = 'Baidu speech recognition & wake-up Flutter bindings.'
   s.description      = <<-DESC
 最新百度语音识别/唤醒 SDK 的 Flutter 插件封装。
@@ -62,6 +62,11 @@ Pod::Spec.new do |s|
         echo "  - Missing: $LIB_PATH or $MODEL_PATH" >&2
         exit 1
       fi
+
+      # Default download sources (kept for backward compatibility).
+      # You can override these via environment variables documented above.
+      DEFAULT_LIB_URL="https://github.com/zHfUmR/jm_baidu_stt_plugin/releases/download/v0.0.1-bin/libBaiduSpeechSDK.a"
+      DEFAULT_MODEL_URL="https://github.com/zHfUmR/jm_baidu_stt_plugin/releases/download/v0.0.1-bin/bds_easr_input_model.dat"
 
       download_file() {
         local url="$1"
@@ -126,12 +131,37 @@ Pod::Spec.new do |s|
         cp -f "$found_lib" "$LIB_PATH"
         cp -f "$found_model" "$MODEL_PATH"
 
+      elif [ -z "${JM_BAIDU_STT_IOS_LIB_URL:-}" ] && [ -z "${JM_BAIDU_STT_IOS_MODEL_URL:-}" ]; then
+        # Backward compatible default: download from the plugin's GitHub Releases.
+        # NOTE: If your network cannot access GitHub, set JM_BAIDU_STT_IOS_SDK_ZIP_URL (or LIB_URL + MODEL_URL)
+        # to a mirror/private artifact store.
+        echo "[jm_baidu_stt_plugin] No iOS SDK download URL provided; using default GitHub Releases URLs." >&2
+        echo "  - lib  : $DEFAULT_LIB_URL" >&2
+        echo "  - model: $DEFAULT_MODEL_URL" >&2
+
+        lib_tmp="$tmp_dir/libBaiduSpeechSDK.a"
+        model_tmp="$tmp_dir/bds_easr_input_model.dat"
+
+        download_file "$DEFAULT_LIB_URL" "$lib_tmp"
+        cp -f "$lib_tmp" "$LIB_PATH"
+
+        download_file "$DEFAULT_MODEL_URL" "$model_tmp"
+        cp -f "$model_tmp" "$MODEL_PATH"
+
+      elif [ -n "${JM_BAIDU_STT_IOS_LIB_URL:-}" ] || [ -n "${JM_BAIDU_STT_IOS_MODEL_URL:-}" ]; then
+        echo "[jm_baidu_stt_plugin] Misconfigured download URLs." >&2
+        echo "  - JM_BAIDU_STT_IOS_LIB_URL and JM_BAIDU_STT_IOS_MODEL_URL must be set together." >&2
+        exit 1
+
       else
         echo "[jm_baidu_stt_plugin] Missing iOS Baidu SDK artifacts." >&2
         echo "  - Missing: $LIB_PATH or $MODEL_PATH" >&2
+        echo "  - Note: In the published Flutter package, these large files are usually excluded via .pubignore." >&2
+        echo "          So CocoaPods cannot find them unless you either (a) provide download URLs, or (b) vendor the files locally." >&2
         echo "  - Provide either:" >&2
         echo "      * JM_BAIDU_STT_IOS_LIB_URL + JM_BAIDU_STT_IOS_MODEL_URL" >&2
         echo "      * or JM_BAIDU_STT_IOS_SDK_ZIP_URL" >&2
+        echo "  - Tip: You can set these ENV vars in your host app ios/Podfile (recommended for CI/team)." >&2
         exit 1
       fi
     fi

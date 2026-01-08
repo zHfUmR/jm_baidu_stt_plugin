@@ -1,3 +1,7 @@
+## 0.1.2
+
+- iOS: Published package does not bundle large Baidu iOS SDK artifacts; `pod install` will try to download them from GitHub Releases by default. Use `JM_BAIDU_STT_IOS_SDK_ZIP_URL` (or `JM_BAIDU_STT_IOS_LIB_URL` + `JM_BAIDU_STT_IOS_MODEL_URL`) to override/mirror if GitHub is not reachable.
+
 ## 0.1.1
 
 - Environment: Upgrade Dart SDK constraint to ^3.7.0 and Flutter to >=3.3.0.

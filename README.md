@@ -23,7 +23,7 @@ Reference guide (step-by-step): [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_I
 
 ## Install
 
-1) Add the dependency to your `pubspec.yaml`: `jm_baidu_stt_plugin: ^0.0.9`
+1) Add the dependency to your `pubspec.yaml`: `jm_baidu_stt_plugin: ^0.1.1`
 
 2) Install packages: `flutter pub get`
 
@@ -38,6 +38,11 @@ Reference guide (step-by-step): [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_I
 Baidu iOS SDK binaries/models are large. For publishing (Git / pub.dev), it is recommended not to commit them into the repository.
 
 This plugin uses CocoaPods `prepare_command` to download missing artifacts during `pod install`.
+
+If you installed the plugin from pub.dev, note that the large iOS SDK artifacts are typically excluded from the published package via `.pubignore`.
+
+- By default, this plugin will try to download the required iOS artifacts from this repo’s GitHub Releases during `pod install`.
+- If your network/CI cannot access GitHub, provide your own download URLs (or vendor the files locally).
 
 ### Usage
 
