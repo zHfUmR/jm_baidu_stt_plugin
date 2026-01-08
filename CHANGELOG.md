@@ -1,3 +1,9 @@
+## 0.1.1
+
+- Environment: Upgrade Dart SDK constraint to ^3.7.0 and Flutter to >=3.3.0.
+- Modernization: Ensure full compatibility with Dart 3.x features and stable performance on the latest Flutter release.
+- Maintenance: Minor cleanup of project configuration files to align with new SDK standards.
+
 ## 0.1.0
 - HarmonyOS (OHOS) Support: Add comprehensive integration guidance for OpenHarmony/HarmonyOS Next.
 - Architectural Standardization: Define explicit MethodChannel and EventChannel contracts to enable manual ArkTS bridging in ohos/ Stage projects without modifying Flutter business logic.
