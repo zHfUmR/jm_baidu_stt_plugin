@@ -1,3 +1,9 @@
+## 0.1.0
+- HarmonyOS (OHOS) Support: Add comprehensive integration guidance for OpenHarmony/HarmonyOS Next.
+- Architectural Standardization: Define explicit MethodChannel and EventChannel contracts to enable manual ArkTS bridging in ohos/ Stage projects without modifying Flutter business logic.
+- Docs: Add OHOS_Baidu_STT_Integration.md providing step-by-step instructions for implementing the Baidu ASR interface on HarmonyOS.
+- Ecosystem: Position the plugin for full-scenario support (Android, iOS, and HarmonyOS) by standardizing platform communication protocols.
+
 ## 0.0.9
 
 - iOS: Align ASR configuration with Baidu's official iOS sample (adds BDS_ASR_PRODUCT_ID and BDS_ASR_LANGUAGE, sets default strategy to online).

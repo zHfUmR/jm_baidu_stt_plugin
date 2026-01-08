@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'jm_baidu_stt_plugin'
-  s.version          = '0.0.9' # 建议同步升级到你准备发布的版本号
+  s.version          = '0.1.0' # 建议同步升级到你准备发布的版本号
   s.summary          = 'Baidu speech recognition & wake-up Flutter bindings.'
   s.description      = <<-DESC
 最新百度语音识别/唤醒 SDK 的 Flutter 插件封装。

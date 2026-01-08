@@ -4,8 +4,22 @@ Flutter bindings for the latest Baidu Speech ASR & wake-up SDKs.
 
 - **Android**: bdasr_V3_20250507_b610f20.jar + native libs (v3.4.5).
 - **iOS**: ASR_iOS_v3.0.12.0.1285b57 static library & resources.
+- **OpenHarmony / HarmonyOS (OHOS)**: this plugin does **not** ship an OHOS native implementation yet. See [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_Integration.md) for a reference integration flow to bridge Baidu real-time ASR to Flutter.
 
 The plugin exposes a simple Dart API that mirrors the reference native demo so you can initialize the SDK, create recognizer/wake-up engines, and handle streaming status callbacks from Dart.
+
+## OpenHarmony / HarmonyOS (OHOS)
+
+This repository currently provides native implementations for **Android** and **iOS** only.
+
+However, **Flutter real-time Baidu ASR can be adapted to OpenHarmony/HarmonyOS** by implementing the same channel contract on the OHOS (ArkTS/Stage) side:
+
+- `MethodChannel('jm_baidu_stt_plugin')`
+- `EventChannel('jm_baidu_stt_plugin/event')`
+
+Reference guide (step-by-step): [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_Integration.md)
+
+**中文说明：本插件因Flutter版本原因暂未提供鸿蒙端（OHOS/OpenHarmony）原生实现，但可以参考 [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_Integration.md) 的流程在你自己的 `ohos/` Stage 工程中完成 ArkTS 侧桥接；Flutter 侧复用相同的通道名/方法协议即可，因此“Flutter + 百度实时语音识别”是可以适配鸿蒙的。**
 
 ## Install
 
@@ -14,6 +28,10 @@ The plugin exposes a simple Dart API that mirrors the reference native demo so y
 2) Install packages: `flutter pub get`
 
 3) For iOS, run CocoaPods from your host app’s `ios/` folder: `pod install`
+
+## Docs
+
+- [OHOS_Baidu_STT_Integration.md](OHOS_Baidu_STT_Integration.md): Reference guide for integrating Baidu real-time ASR on OpenHarmony/HarmonyOS (OHOS) and bridging it to Flutter via MethodChannel/EventChannel.
 
 ## iOS SDK delivery (recommended)
 
